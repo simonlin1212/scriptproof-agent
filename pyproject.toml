@@ -1,0 +1,52 @@
+[project]
+name = "scriptproof-agent"
+version = "0.1.0"
+description = "A citation-grounded screenplay research and continuity agent."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "Flask==3.1.3",
+    "google-adk==2.8.0",
+    "google-genai==2.20.0",
+    "gunicorn==26.2.0",
+    "parallel-google-adk==0.0.1",
+    "pydantic==2.12.5",
+    "python-dotenv==1.2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "pytest-cov==7.0.0",
+    "ruff==0.14.14",
+]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+scriptproof = ["templates/*.html", "static/*.css", "static/*.js"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["integration: requires live Google and Parallel credentials"]
+
+[tool.coverage.run]
+branch = true
+source = ["scriptproof"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 80
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

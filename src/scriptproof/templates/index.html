@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citation-grounded screenplay research and continuity review.">
+    <title>ScriptProof — Research before the first take</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="wordmark" href="/" aria-label="ScriptProof home">
+        <span class="proof-mark">SP</span>
+        <span>ScriptProof</span>
+      </a>
+      <div class="track-label"><span></span> Parallel track · Agentic Cinema</div>
+    </header>
+
+    <main>
+      {% if not run %}
+      <section class="hero">
+        <div class="eyebrow">A PRE-PRODUCTION RESEARCH AGENT</div>
+        <h1>Research before<br>the first <em>take.</em></h1>
+        <p class="lede">ScriptProof reads the draft, isolates claims worth checking, searches live sources, and returns a cited revision brief your team can act on.</p>
+        <div class="proof-strip" aria-label="Workflow">
+          <span>01 · Read</span><i></i><span>02 · Research</span><i></i><span>03 · Resolve</span>
+        </div>
+      </section>
+
+      <section class="workspace" id="workspace">
+        <div class="workspace-heading">
+          <div>
+            <span class="section-number">01</span>
+            <h2>Open a new proof</h2>
+          </div>
+          <button class="text-button" type="button" id="load-sample">Load sample scene ↗</button>
+        </div>
+
+        {% if error %}<div class="error-banner" role="alert">{{ error }}</div>{% endif %}
+
+        <form method="post" action="/analyze" id="proof-form">
+          <label for="script_text">Screenplay text</label>
+          <textarea id="script_text" name="script_text" maxlength="{{ max_chars }}" required placeholder="INT. EDITING ROOM — NIGHT&#10;&#10;The last reel begins to turn...">{{ script_text or '' }}</textarea>
+          <div class="field-meta"><span>Plain text · scene headings recommended</span><span id="char-count">0 / {{ max_chars }}</span></div>
+
+          <label for="project_context">Production context <small>optional</small></label>
+          <input id="project_context" name="project_context" maxlength="1000" value="{{ project_context or '' }}" placeholder="e.g. London, 1938 · historical thriller · feature film">
+
+          {% if access_required %}
+          <label for="access_code">Reviewer access code</label>
+          <input id="access_code" name="access_code" type="password" autocomplete="off" required placeholder="Provided with the judging instructions">
+          {% endif %}
+
+          <button class="primary-action" type="submit">
+            <span>Run the proof</span>
+            <span class="arrow">↗</span>
+          </button>
+        </form>
+      </section>
+
+      <section class="promise-grid">
+        <article><b>FACTUAL GROUNDING</b><p>Period details, technology, locations, safety and legal claims checked against live sources.</p></article>
+        <article><b>CONTINUITY PASS</b><p>Character knowledge, objects, timing and scene logic compared across the draft.</p></article>
+        <article><b>REVISION ACTIONS</b><p>Every issue ends with a concrete next move for writing or production.</p></article>
+      </section>
+      {% else %}
+      <section class="report-hero">
+        <a class="back-link" href="/">← New proof</a>
+        <div class="report-kicker">SCRIPT PROOF · {{ run.run_id }}</div>
+        <div class="report-title-row">
+          <div>
+            <h1>{{ run.report.title }}</h1>
+            <p>{{ run.report.logline }}</p>
+          </div>
+          <div class="score" style="--score: {{ run.report.summary.readiness_score }}">
+            <strong>{{ run.report.summary.readiness_score }}</strong><span>/100</span>
+            <small>research readiness</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-board">
+        <article class="summary-lead"><span>EDITOR'S READ</span><h2>{{ run.report.summary.headline }}</h2></article>
+        <article><span>STRONGEST ELEMENT</span><p>{{ run.report.summary.strongest_element }}</p></article>
+        <article><span>FIRST REVISION</span><p>{{ run.report.summary.highest_priority }}</p></article>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-title"><span>01</span><h2>Evidence ledger</h2><p>{{ run.report.findings|length }} claims reviewed</p></div>
+        <div class="ledger">
+          {% for finding in run.report.findings %}
+          <article class="finding verdict-{{ finding.verdict }}">
+            <div class="finding-status">{{ finding.verdict|replace('_', ' ') }}</div>
+            <h3>{{ finding.claim }}</h3>
+            <p>{{ finding.explanation }}</p>
+            <div class="recommendation"><b>Revision note</b>{{ finding.recommendation }}</div>
+            {% if finding.sources %}
+            <div class="sources">
+              {% for source in finding.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }} ↗</a>{% endfor %}
+            </div>
+            {% endif %}
+          </article>
+          {% else %}<p class="empty-state">No external claims required a verdict.</p>{% endfor %}
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-title"><span>02</span><h2>Continuity desk</h2><p>{{ run.report.continuity_issues|length }} issues</p></div>
+        <div class="issue-list">
+          {% for issue in run.report.continuity_issues %}
+          <article>
+            <div class="severity severity-{{ issue.severity }}">{{ issue.severity }}</div>
+            <div><small>SCENES {{ issue.scenes|join(' · ') }}</small><h3>{{ issue.issue }}</h3><p>{{ issue.recommendation }}</p></div>
+          </article>
+          {% else %}<p class="empty-state">No defensible continuity breaks found.</p>{% endfor %}
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section-title"><span>03</span><h2>Production handoff</h2><p>department actions</p></div>
+        <div class="department-grid">
+          {% for note in run.report.production_notes %}
+          <article><span>{{ note.department }}</span><h3>{{ note.note }}</h3><p>{{ note.action }}</p></article>
+          {% else %}<p class="empty-state">No additional production notes.</p>{% endfor %}
+        </div>
+      </section>
+
+      <footer class="report-footer">
+        <div><b>{{ run.parallel_calls }}</b><span>Parallel tool calls</span></div>
+        <div><b>{{ run.report.findings|map(attribute='sources')|map('length')|sum }}</b><span>sources preserved</span></div>
+        <div><b>{{ run.generated_at.strftime('%d %b %Y') }}</b><span>generated</span></div>
+      </footer>
+      {% endif %}
+    </main>
+
+    <div class="loading-screen" id="loading-screen" aria-hidden="true">
+      <div class="loading-reel"><span></span><span></span><span></span><span></span></div>
+      <p id="loading-copy">Reading the draft…</p>
+      <div class="loading-line"><i></i></div>
+      <small>Gemini + Parallel are building the evidence ledger</small>
+    </div>
+  </body>
+</html>

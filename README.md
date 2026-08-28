@@ -146,6 +146,9 @@ The suite covers configuration drift, isolated environment loading, screenplay b
 
 ScriptProof is being built as a new project for the **Parallel track** of [Agentic Cinema: The Blockbuster Hackathon](https://agentic-cinema.devpost.com/). It uses Google Cloud AI exclusively for model and agent behavior and calls Parallel Search at runtime, matching the track's published requirements.
 
+- [Live project](https://scriptproof-web-388088752401.asia-southeast1.run.app/)
+- [Public 2:17 demo](https://youtu.be/hyHVu464XAM)
+
 ## Disclaimer
 
 ScriptProof is a research and editorial aid, not legal, safety, historical, or production authority. Human department leads must review sources and decisions before a shoot.

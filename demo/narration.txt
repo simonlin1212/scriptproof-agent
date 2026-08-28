@@ -1,0 +1,17 @@
+Film crews can fix a line in a draft. Fixing the wrong prop after a shoot is far more expensive.
+
+ScriptProof is a pre-production research agent for screenwriters and small crews. I paste a scene, add the period and location, and start one proof.
+
+The first agent reads the draft and selects only claims that can change a production decision. In this 1938 radio scene, it spots a portable magnetic tape recorder and a live dial tone.
+
+The second agent uses Parallel Search at runtime. It runs bounded searches, keeps the exact URLs returned by the tool, and removes low-authority publishers before the evidence reaches the editor.
+
+The third agent compares that evidence with scene logic. The report says the tape recorder is anachronistic and recommends a transcription disc recorder instead. The sources include the Computer History Museum and the Library of Congress.
+
+The dial tone is historically plausible, but the screenplay says the phone lines are down. ScriptProof treats that as a continuity question. It also catches a locked door opening without explanation, and a scene marked "later" even though the clock runs backward.
+
+Then it turns those findings into work. Props gets a period-accurate replacement. Writing gets continuity fixes. Sound gets a concrete 1930s dial-tone reference.
+
+Under the hood, Google ADK runs the three agents on Gemini 3.5 Flash in Vertex AI. Parallel's official ADK tools perform the live search and fetch calls. The system fails closed if no Parallel call completes, if a citation did not come from a tool response, or if a blocked source returns.
+
+One draft goes in. A cited revision brief comes out, before the first take.

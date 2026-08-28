@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ScriptProof architecture</title>
+  <style>
+    :root { --paper:#f1eee5; --ink:#171714; --red:#b63a2b; --line:#cbc5b8; --green:#426b52; }
+    * { box-sizing:border-box; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; background:var(--paper); color:var(--ink); }
+    body { padding:64px 76px; font-family:"Avenir Next", Arial, sans-serif; }
+    header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:22px; }
+    .brand { display:flex; align-items:center; gap:15px; font:700 26px Georgia,serif; }
+    .mark { display:grid; place-items:center; width:43px; height:43px; background:var(--red); color:white; font:700 12px "Courier New",monospace; transform:rotate(-3deg); }
+    .track { color:#635f58; font:700 12px "Courier New",monospace; letter-spacing:.1em; text-transform:uppercase; }
+    h1 { margin:42px 0 10px; font:400 66px/1 Georgia,serif; }
+    .sub { margin:0 0 42px; color:#5d5952; font:18px/1.5 Georgia,serif; }
+    .flow { display:grid; grid-template-columns:1fr 84px 1fr 84px 1fr; align-items:stretch; }
+    .agent { min-height:290px; padding:28px; border:1px solid var(--line); background:rgba(255,255,255,.2); }
+    .agent b { display:block; color:var(--red); font:700 12px "Courier New",monospace; letter-spacing:.1em; text-transform:uppercase; }
+    .agent h2 { margin:18px 0 14px; font:400 34px/1.08 Georgia,serif; }
+    .agent p { margin:0; color:#4f4b45; font:16px/1.5 Georgia,serif; }
+    .tool { margin-top:22px; padding:12px 14px; background:var(--ink); color:var(--paper); font:700 12px "Courier New",monospace; }
+    .tool.parallel { background:var(--red); }
+    .arrow { display:grid; place-items:center; color:var(--red); font:46px Georgia,serif; }
+    .gates { display:grid; grid-template-columns:repeat(3,1fr); margin-top:42px; border:1px solid var(--line); }
+    .gate { padding:22px 26px; border-right:1px solid var(--line); }
+    .gate:last-child { border:0; }
+    .gate b { display:block; margin-bottom:8px; color:var(--green); font:700 11px "Courier New",monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .gate span { font:16px/1.35 Georgia,serif; }
+    footer { display:flex; justify-content:space-between; margin-top:30px; color:#6f6a62; font:11px "Courier New",monospace; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="mark">SP</span>ScriptProof</div>
+    <div class="track">Google Cloud · Parallel track</div>
+  </header>
+  <h1>Three agents. One production brief.</h1>
+  <p class="sub">A bounded Google ADK workflow turns screenplay claims into cited decisions.</p>
+  <main class="flow">
+    <section class="agent">
+      <b>01 · Read</b>
+      <h2>Script Analyst</h2>
+      <p>Finds the few factual claims and continuity questions that can change a production decision.</p>
+      <div class="tool">Gemini 3.5 Flash · Vertex AI</div>
+    </section>
+    <div class="arrow">→</div>
+    <section class="agent">
+      <b>02 · Research</b>
+      <h2>Evidence Researcher</h2>
+      <p>Runs live, bounded searches and preserves the exact URLs returned by the partner tools.</p>
+      <div class="tool parallel">Parallel Search + Fetch</div>
+    </section>
+    <div class="arrow">→</div>
+    <section class="agent">
+      <b>03 · Resolve</b>
+      <h2>Story Editor</h2>
+      <p>Combines trusted evidence with scene logic and assigns concrete revision work by department.</p>
+      <div class="tool">Gemini 3.5 Flash · Vertex AI</div>
+    </section>
+  </main>
+  <section class="gates">
+    <div class="gate"><b>Provenance gate</b><span>Every citation must match a URL observed in a successful Parallel response.</span></div>
+    <div class="gate"><b>Source-quality gate</b><span>Blocked publishers are removed before editing and checked again before delivery.</span></div>
+    <div class="gate"><b>Fail-closed runtime</b><span>No Parallel call, invalid output, or unverified citation means no public report.</span></div>
+  </section>
+  <footer><span>Cloud Run · asia-southeast1</span><span>Gemini model location · global</span></footer>
+</body>
+</html>

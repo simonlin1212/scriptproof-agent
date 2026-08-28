@@ -130,3 +130,47 @@ fixture. All 16 assertions passed on desktop and a 390-pixel mobile viewport,
 including form completion, HTTPS citations, blocked-source absence, runtime
 evidence display, and horizontal-overflow checks. Both screenshots were also
 inspected visually.
+
+## 2026-08-28 — Public repository and demo
+
+The repository was published at `https://github.com/simonlin1212/scriptproof-agent`.
+The first public GitHub Actions run installed the locked environment, passed
+Ruff, and passed the full test suite. Repository metadata points to the hosted
+Cloud Run service.
+
+The English demo was built from reviewed 1920×1080 browser captures of the live
+interface and the accepted real-run report. It includes the input flow, research
+state, evidence ledger, continuity desk, production handoff, architecture, and
+runtime counters. The narration was transcribed after synthesis to check for
+missing lines, normalized to -16 LUFS, and delivered with burned-in English
+captions.
+
+The final H.264/AAC video is 1920×1080, 30 fps, `yuv420p`, and 2:17 long. It was
+published publicly at `https://youtu.be/hyHVu464XAM`; an anonymous metadata check
+confirmed the title, duration, public availability, and watch URL.
+
+## 2026-08-29 — Credential rotation and Devpost registration
+
+Production was first pinned to the last known-good Parallel secret version so a
+change to `latest` could not affect the live service unexpectedly. A new secret
+version was then deployed to a tagged, zero-traffic Cloud Run revision. Its
+health check returned HTTP 200, an anonymous paid request returned HTTP 403, and
+a complete sample analysis returned HTTP 200 with real Gemini and Parallel
+calls before traffic moved.
+
+During the rotation audit, that candidate credential appeared once in private
+operator output. It was treated as exposed instead of being accepted. A second
+new Parallel key and Secret Manager version were created and put through the
+same zero-traffic process. The final candidate completed three Parallel calls,
+two findings, two accepted citations, and zero blocked source domains. Cloud Run
+revision `scriptproof-web-00007-der` then received 100% of production traffic.
+
+The original key and the discarded candidate key were deleted from Parallel.
+Secret Manager versions 1, 2, and 3 are disabled; production is pinned to enabled
+version 4. Temporary Cloud Run traffic tags were removed. The public health
+check still returns HTTP 200 after the old versions were disabled.
+
+The Agentic Cinema registration form was submitted successfully. The project is
+registered as a solo entry with marketing opt-in left off. Devpost requires an
+interactive reCAPTCHA before the project record itself can be created, so the
+final submission resumes immediately after that manual gate is completed.

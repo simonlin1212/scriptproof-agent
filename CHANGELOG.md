@@ -13,6 +13,10 @@ All notable changes to ScriptProof are documented here.
 - Deterministic low-authority source filtering and final report quality validation.
 - Story Editor conversation isolation and sanitized production-context handoff.
 - Cloud Run production deployment with dedicated identity and Secret Manager.
+- Public GitHub repository, GitHub Actions verification, and a captioned 2:17
+  public demo video.
+- Staged, zero-traffic credential rotation with an exact Secret Manager version
+  pin and post-cutover revocation of obsolete credentials.
 
 ### Fixed
 

@@ -11,3 +11,4 @@ dist/
 *.py[cod]
 coverage.xml
 htmlcov/
+demo/output/

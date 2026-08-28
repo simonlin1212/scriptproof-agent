@@ -1,6 +1,6 @@
 # ScriptProof current status
 
-> Current phase: **production deployment and browser QA complete; preparing the public submission package.**
+> Current phase: **hosted app, public repository, public demo, and Devpost registration complete; final submission in progress.**
 >
 > Deadline: 2026-09-10 05:00 Asia/Singapore.
 
@@ -34,20 +34,25 @@
   enforced after model output, not only requested in prompts.
 - Desktop and 390-pixel mobile browser QA passed all 16 functional assertions;
   the live report has no horizontal overflow.
+- Public GitHub repository created and CI passed on `main`.
+- Public English demo published to YouTube at 2:17, below the 3-minute limit;
+  anonymous metadata verification confirms `public` availability.
+- English Devpost copy, architecture graphic, reviewed screenshots, narration,
+  and subtitle source are complete.
+- Parallel production credentials were rotated through two zero-traffic
+  candidates. The accepted revision is pinned to Secret Manager version 4;
+  versions 1-3 are disabled and the obsolete Parallel API keys were deleted.
+- Devpost registration is complete with Hong Kong as the account region.
 - Agentic Brief parent repository remains clean.
 
 ## Next actions
 
-1. Rotate the pre-release Parallel credential with a staged rollout: first pin
-   production to its current secret version, then add the new version, deploy a
-   tagged no-traffic candidate pinned to it, validate the candidate, shift
-   traffic, and only then revoke the old credential.
-2. Create the public GitHub repository.
-3. Produce the English Devpost page, architecture graphic, screenshots, and
-   ≤3-minute public demo.
-4. Submit to the Parallel track and verify `SUBMITTED` before the deadline.
+1. Complete the Devpost human-verification gate, create the project, select the
+   Parallel track, provide the reviewer
+   access code in the private judging instructions, and submit.
+2. Verify the entry status and all public links from the submitted project page.
 
 ## Current blocker
 
-No engineering blocker. One manual account-security gate and the submission
-packaging remain.
+No engineering blocker. Devpost currently requires a manual reCAPTCHA before it
+will create the project; the submission package itself is complete.

@@ -70,8 +70,9 @@ uv run pytest --cov=scriptproof --cov-report=term-missing -q
 
 ## 比赛
 
-ScriptProof 是为 [Agentic Cinema](https://agentic-cinema.devpost.com/) 的 Parallel 赛道新建的独立项目。AI 与 Agent 能力只使用 Google Cloud，Parallel Search 在生产流程中被真实调用。
+ScriptProof 已提交至 [Agentic Cinema](https://agentic-cinema.devpost.com/) 的 Parallel 赛道。AI 与 Agent 能力只使用 Google Cloud，Parallel Search 在生产流程中被真实调用。
 
+- [Devpost 参赛页](https://devpost.com/software/scriptproof)
 - [线上项目](https://scriptproof-web-388088752401.asia-southeast1.run.app/)
 - [2 分 17 秒公开演示](https://youtu.be/hyHVu464XAM)
 

@@ -1,6 +1,6 @@
 # ScriptProof current status
 
-> Current phase: **hosted app, public repository, public demo, and Devpost registration complete; final submission in progress.**
+> Current phase: **submitted to Devpost. Public entry and production service are live.**
 >
 > Deadline: 2026-09-10 05:00 Asia/Singapore.
 
@@ -43,16 +43,21 @@
   candidates. The accepted revision is pinned to Secret Manager version 4;
   versions 1-3 are disabled and the obsolete Parallel API keys were deleted.
 - Devpost registration is complete with Hong Kong as the account region.
+- Devpost entry submitted to the Parallel track at
+  `https://devpost.com/software/scriptproof`; the management page shows
+  `SUBMITTED` and `5/5 steps done`.
+- The submitted public page contains the hosted app, public repository, public
+  English demo, MIT-licensed source, eight technology tags, and six media images.
+- The reviewer access code is present only in Devpost's private judge information.
 - Agentic Brief parent repository remains clean.
 
 ## Next actions
 
-1. Complete the Devpost human-verification gate, create the project, select the
-   Parallel track, provide the reviewer
-   access code in the private judging instructions, and submit.
-2. Verify the entry status and all public links from the submitted project page.
+1. Keep the Cloud Run service healthy through judging.
+2. Preserve the submitted repository, video, and Devpost materials. Make changes
+   only for a verified availability, security, or eligibility problem, followed
+   by full revalidation.
 
 ## Current blocker
 
-No engineering blocker. Devpost currently requires a manual reCAPTCHA before it
-will create the project; the submission package itself is complete.
+No blocker. The entry is submitted.

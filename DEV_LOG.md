@@ -174,3 +174,25 @@ The Agentic Cinema registration form was submitted successfully. The project is
 registered as a solo entry with marketing opt-in left off. Devpost requires an
 interactive reCAPTCHA before the project record itself can be created, so the
 final submission resumes immediately after that manual gate is completed.
+
+## 2026-08-29 — Devpost submission accepted
+
+After Simon completed Devpost's interactive reCAPTCHA, the ScriptProof project
+record was created and all five submission steps were completed. The entry is
+submitted at `https://devpost.com/software/scriptproof` under submission ID
+`1158316`.
+
+The final entry is an individual, one-person, new project from Hong Kong in the
+Parallel track. Marketing opt-ins were left disabled. The public project page
+contains the complete project story, eight technology tags, the live Cloud Run
+service, public GitHub repository, five gallery images plus the thumbnail, and
+the public 2:17 YouTube demo. The GitHub repository is public, its latest Actions
+run passed, and GitHub's repository license endpoint recognizes the committed
+license as MIT.
+
+The reviewer access code was entered only in Devpost's organizer/judge-only
+additional-information field. It was not placed on the public project page or
+committed to the repository. Final browser verification found the complete
+story, both public links, the video embed, and all media. The Devpost management
+page shows `SUBMITTED` and `5/5 steps done`; a saved screenshot independently
+records that state.

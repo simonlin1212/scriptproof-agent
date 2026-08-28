@@ -5,6 +5,7 @@
 - Live project: https://scriptproof-web-388088752401.asia-southeast1.run.app/
 - Public source: https://github.com/simonlin1212/scriptproof-agent
 - Demo video: https://youtu.be/hyHVu464XAM
+- Devpost entry: https://devpost.com/software/scriptproof (`SUBMITTED`)
 
 ## Tagline
 

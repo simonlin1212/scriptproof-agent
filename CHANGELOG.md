@@ -17,6 +17,8 @@ All notable changes to ScriptProof are documented here.
   public demo video.
 - Staged, zero-traffic credential rotation with an exact Secret Manager version
   pin and post-cutover revocation of obsolete credentials.
+- Submitted the complete public project to the Agentic Cinema Parallel track on
+  Devpost with hosted app, source, demo, gallery, and private judge access.
 
 ### Fixed
 

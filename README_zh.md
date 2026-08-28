@@ -44,6 +44,8 @@ ScriptProof 把剧本草稿转化为一份带出处、可以直接交给编剧�
 
 三个 Agent 由 Google ADK 编排，模型使用 Gemini 3.5 Flash。Parallel 官方 `parallel-google-adk` 包提供搜索、网页提取和调用追踪。报告返回前，系统会确认待研究事实确实触发过 Parallel 调用，并逐条核对公开引用是否来自 Parallel 工具的真实返回。
 
+系统还设有确定性的来源质量门：低权威来源会在故事编辑 Agent 读取之前被移除；如果删除后没有足够证据，原本确定性的结论会自动降级为“证据不足”。故事编辑 Agent 只接收受控的结构化状态和经过清理、限长的制作背景，不继承前序 Agent 的原始对话。
+
 ## 本地运行
 
 需要 Python 3.12、已启用 Vertex AI 的 Google Cloud 项目，以及 Parallel API Key。
@@ -63,6 +65,8 @@ uv run python main.py
 uv run ruff check .
 uv run pytest --cov=scriptproof --cov-report=term-missing -q
 ```
+
+当前验证结果为 47 项测试通过、覆盖率 89.00%。线上版本已部署至 [Cloud Run](https://scriptproof-web-388088752401.asia-southeast1.run.app/)，付费分析入口使用评审访问码保护。
 
 ## 比赛
 

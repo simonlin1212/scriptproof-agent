@@ -20,11 +20,14 @@ ScriptProof is a single-purpose pre-production agent. It accepts plain screenpla
 - May call `web_fetch` when a source needs full-page context.
 - Prefers first-party and institutional evidence.
 - Uses `ResearchBundle` as a strict output contract.
+- Passes through a deterministic source-quality sanitizer after agent execution.
 
 ### Story Editor
 
 - Receives both prior structured records.
 - Cannot call search tools or introduce new sources.
+- Does not inherit the raw prior-agent conversation.
+- Receives production context only as sanitized, bounded, explicitly untrusted data.
 - Converts evidence and continuity candidates into department actions.
 - Uses `ScriptReport` as the public output contract.
 
@@ -45,6 +48,8 @@ Gemini Script Analyst
 Gemini Evidence Researcher ---- Parallel Search API
   |                                  |
   |<------ excerpts + citations -----+
+  |
+  | deterministic source-quality gate
   v
 Gemini Story Editor
   |
@@ -59,6 +64,10 @@ Evidence ledger + continuity desk + production handoff
 - Model output is untrusted until Pydantic validation succeeds.
 - Source URLs are accepted only when they are valid HTTPS URLs.
 - Every published source URL must exactly match a URL captured from a Parallel tool response.
+- Blocked low-authority publisher classes are removed before editing and rejected again at delivery.
+- A definitive finding that loses all acceptable evidence is downgraded to `uncertain`.
+- Production context is escaped, capped at 1,000 characters, and kept out of system instructions.
+- The editor's model request is rebuilt from controlled state so prior raw content cannot become an instruction channel.
 - A run with research claims fails closed when no Parallel call completes.
 - Provider exceptions are logged server-side; the client receives a generic error.
 - Local configuration loads only the repository's own `.env`; production secrets come from Secret Manager.
@@ -75,5 +84,5 @@ Evidence ledger + continuity desk + production handoff
 ## Current trade-offs
 
 - Analysis is synchronous to keep the first submission small and auditable. Cloud Run uses a 600-second timeout.
-- Reports are not persisted in the MVP. The next production increment can add Firestore without changing the agent contracts.
+- Reports are not persisted in the MVP. A later production increment can add Firestore without changing the agent contracts.
 - Plain text is accepted first. PDF parsing is intentionally deferred so the demo centers on agent behavior rather than file-format handling.

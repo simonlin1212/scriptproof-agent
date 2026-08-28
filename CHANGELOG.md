@@ -10,6 +10,9 @@ All notable changes to ScriptProof are documented here.
 - Runtime Parallel Search integration with exact citation provenance checks.
 - Server-rendered review interface, JSON API, sample screenplay, and Cloud Run packaging.
 - Reviewer access code, bounded inputs, structured-output validation, and security checks.
+- Deterministic low-authority source filtering and final report quality validation.
+- Story Editor conversation isolation and sanitized production-context handoff.
+- Cloud Run production deployment with dedicated identity and Secret Manager.
 
 ### Fixed
 
@@ -20,3 +23,6 @@ All notable changes to ScriptProof are documented here.
 - Excluded failed `web_fetch` fallback URLs from the verified citation set.
 - Returned HTTP 400 for malformed JSON request shapes and field types.
 - Required the canonical Vertex AI location value `global`.
+- Downgraded definitive findings when source filtering removes all acceptable evidence.
+- Prevented user production context and prior raw agent content from becoming editor instructions.
+- Redacted provider-controlled exception messages from production logs.

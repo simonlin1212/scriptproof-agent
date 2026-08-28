@@ -69,8 +69,8 @@ The official Agentic Cinema Google Cloud credit form was submitted successfully 
 ## 2026-08-28 — Live integration accepted
 
 Simon supplied the Parallel credential. It was stored only in the repository's
-ignored `.env` file with mode `600`; the credential was not printed, committed,
-or copied into documentation.
+ignored `.env` file with mode `600`; the credential was not committed or copied
+into documentation.
 
 The sample screenplay completed repeatedly against real Gemini 3.5 Flash on
 Vertex AI and the official Parallel ADK tools. The first reviewable run produced
@@ -91,3 +91,42 @@ per claim and passes an ADK `RunConfig` limiting the complete workflow to 20 LLM
 calls. Final verification: Ruff clean, 38 tests passed, 86.79% coverage, bounded
 live smoke passed, and the follow-up independent review found no actionable
 regressions.
+
+## 2026-08-28 — Production deployment and source-quality gate
+
+ScriptProof was deployed to Cloud Run in `asia-southeast1` using the dedicated
+`scriptproof-runtime` service account. Gemini remains pinned to the Vertex AI
+`global` model location. The Parallel key and reviewer code are read from Secret
+Manager, the request timeout is 600 seconds, and the judging deployment is
+bounded to one instance.
+
+The deployed service passed four production checks: health returned HTTP 200,
+an anonymous paid API request returned HTTP 403, the sample screenplay completed
+against real Gemini 3.5 Flash and Parallel, and the public report preserved only
+URLs observed in successful Parallel responses. The accepted cloud run made six
+Parallel calls, produced two research findings, scored the draft 85/100, and
+preserved six citations from institutional or established publishers.
+
+Prompt guidance alone was not treated as a sufficient quality control. A
+deterministic post-research gate now removes blocked low-authority publisher
+classes before the editor sees them. If removing those sources leaves a
+definitive verdict without evidence, the verdict is downgraded to `uncertain`.
+A final validation gate also rejects any report that reintroduces a blocked
+citation.
+
+The Story Editor now receives only controlled structured state plus sanitized,
+length-bounded production context. It does not inherit the raw prior-agent
+conversation. User context is treated as untrusted data, delimiter-like input is
+escaped, and the editor has no research tools.
+
+Regression work covered hostname normalization, lookalike domains, source
+removal, verdict downgrades, state sanitization, current-turn isolation, context
+preservation, and delimiter injection. Final engineering verification: Ruff
+clean, 47 tests passed, 89.00% coverage, full-history secret scan clean, and an
+independent review found no actionable regressions.
+
+Browser QA used the successful production report as a deterministic visual test
+fixture. All 16 assertions passed on desktop and a 390-pixel mobile viewport,
+including form completion, HTTPS citations, blocked-source absence, runtime
+evidence display, and horizontal-overflow checks. Both screenshots were also
+inspected visually.

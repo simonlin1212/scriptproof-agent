@@ -5,7 +5,9 @@ from __future__ import annotations
 import asyncio
 import hmac
 import logging
+import traceback
 from collections.abc import Awaitable, Callable
+from pathlib import Path
 from typing import Any
 
 from flask import Flask, jsonify, render_template, request
@@ -16,6 +18,16 @@ from scriptproof.pipeline import ReportRun, generate_report
 
 ReportGenerator = Callable[[str, str], Awaitable[ReportRun]]
 logger = logging.getLogger(__name__)
+
+
+def log_sanitized_exception(label: str, exc: Exception) -> None:
+    """Keep diagnostic locations without logging provider-controlled messages."""
+    frames = traceback.extract_tb(exc.__traceback__)
+    locations = " > ".join(
+        f"{Path(frame.filename).name}:{frame.lineno}:{frame.name}"
+        for frame in frames[-8:]
+    )
+    logger.error("%s (%s) at %s", label, type(exc).__name__, locations or "unknown")
 
 
 def create_app(
@@ -72,8 +84,8 @@ def create_app(
                 ),
                 400,
             )
-        except Exception:
-            logger.exception("ScriptProof analysis failed")
+        except Exception as exc:
+            log_sanitized_exception("ScriptProof analysis failed", exc)
             return (
                 render_template(
                     "index.html",
@@ -109,8 +121,8 @@ def create_app(
             run = asyncio.run(report_generator(script_text, project_context))
         except ScriptInputError as exc:
             return jsonify({"error": str(exc)}), 400
-        except Exception:
-            logger.exception("ScriptProof API analysis failed")
+        except Exception as exc:
+            log_sanitized_exception("ScriptProof API analysis failed", exc)
             return jsonify({"error": "The research run could not be completed."}), 500
         return jsonify(run.to_dict())
 

@@ -1,3 +1,4 @@
+import logging
 from datetime import UTC, datetime
 
 import pytest
@@ -36,7 +37,11 @@ def app(report_run):
         assert "INT. ARCHIVE" in script_text
         return report_run
 
-    return create_app(report_generator=fake_generator, max_chars=4000)
+    return create_app(
+        report_generator=fake_generator,
+        max_chars=4000,
+        access_code="",
+    )
 
 
 def test_health_is_available_without_credentials(app):
@@ -128,3 +133,27 @@ def test_access_code_protects_paid_analysis(report_run):
         headers={"X-ScriptProof-Key": "judge-only"},
     )
     assert api_allowed.status_code == 200
+
+
+def test_provider_error_log_does_not_include_sensitive_exception_message(caplog):
+    async def failing_generator(script_text: str, project_context: str = ""):
+        raise RuntimeError("provider header contained secret-value")
+
+    protected = create_app(
+        report_generator=failing_generator,
+        max_chars=4000,
+        access_code="judge-only",
+    )
+    script = "INT. ARCHIVE - NIGHT\n" + ("A reel turns in the dark. " * 20)
+
+    with caplog.at_level(logging.ERROR, logger="scriptproof.service"):
+        response = protected.test_client().post(
+            "/api/analyze",
+            json={"script_text": script},
+            headers={"X-ScriptProof-Key": "judge-only"},
+        )
+
+    assert response.status_code == 500
+    assert "RuntimeError" in caplog.text
+    assert "failing_generator" in caplog.text
+    assert "secret-value" not in caplog.text

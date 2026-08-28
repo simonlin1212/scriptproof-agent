@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
+from google.adk.agents import RunConfig
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -18,6 +19,7 @@ from scriptproof.models import ScriptAnalysis, ScriptReport
 APP_NAME = "scriptproof"
 USER_ID = "web-reviewer"
 PARALLEL_TOOL_NAMES = frozenset({"web_search", "web_fetch"})
+MAX_LLM_CALLS = 20
 
 
 @dataclass(slots=True)
@@ -154,6 +156,7 @@ async def generate_report(
         user_id=USER_ID,
         session_id=session.id,
         new_message=message,
+        run_config=RunConfig(max_llm_calls=MAX_LLM_CALLS),
     ):
         collect_parallel_evidence(event, parallel_evidence)
 

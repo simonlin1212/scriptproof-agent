@@ -4,6 +4,7 @@ import pytest
 
 from scriptproof.models import ScriptReport
 from scriptproof.pipeline import (
+    MAX_LLM_CALLS,
     ReportRun,
     collect_parallel_evidence,
     enforce_parallel_research,
@@ -24,6 +25,10 @@ class FakeEvent:
 
     def get_function_responses(self):
         return self._responses
+
+
+def test_agent_run_has_a_bounded_llm_call_budget():
+    assert 1 <= MAX_LLM_CALLS <= 20
 
 
 def test_extract_report_from_state_validates_structured_output():

@@ -27,10 +27,22 @@ first-party sources, museums, archives, universities, government sources, and
 established trade publications. Use web_fetch when a high-value result needs more
 context. Do not rely on snippets alone when the full page is necessary.
 
+Treat source quality as part of the verdict. Do not cite community-edited
+encyclopedias, AI-generated encyclopedia mirrors, answer marketplaces, generic
+SEO pages, or unattributed personal blogs when making a definitive claim. Search
+again for an identifiable institution or established publication instead. Aim
+for two independent, directly relevant sources for supported or contradicted
+verdicts when they are available. If only weak or indirect sources can be found,
+mark the claim uncertain and explain the evidence gap. Use no more than two
+web_search calls and one web_fetch call per claim; never keep searching merely
+to force a definitive verdict.
+
 For each claim, choose supported, contradicted, uncertain, or context_needed.
 A supported or contradicted verdict must include at least one working HTTPS source.
 If evidence is weak or conflicting, say uncertain instead of forcing certainty.
-Preserve exact source URLs. Return only the requested structured output.
+Before finalizing, check that each cited page directly supports the exact claim
+and that its publisher is identifiable. Preserve exact source URLs. Return only
+the requested structured output.
 """.strip()
 
 EDIT_REPORT = """

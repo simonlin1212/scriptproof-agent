@@ -65,3 +65,29 @@ Google Application Default Credentials are available and the existing GCP projec
 ### Google Cloud credit request
 
 The official Agentic Cinema Google Cloud credit form was submitted successfully on 2026-08-28 for `linsizhen@gmail.com`, Devpost username `linsizhen`, country `Hong Kong`, and partner integration `Parallel Search API`. The form states that approved credits should arrive within five business days and that the coupon must be redeemed by August 31, 2026 at 11:59 PM PST.
+
+## 2026-08-28 — Live integration accepted
+
+Simon supplied the Parallel credential. It was stored only in the repository's
+ignored `.env` file with mode `600`; the credential was not printed, committed,
+or copied into documentation.
+
+The sample screenplay completed repeatedly against real Gemini 3.5 Flash on
+Vertex AI and the official Parallel ADK tools. The first reviewable run produced
+six Parallel calls, two findings, and six citations. Manual inspection found two
+weak publisher types, so the researcher instructions were tightened to prefer
+identifiable institutional and established sources and to return `uncertain`
+when only weak evidence is available.
+
+The improved run returned citations from the University of Illinois preservation
+program, IEEE Spectrum, the National Inventors Hall of Fame, and RTÉ Archives.
+The final bounded smoke test completed successfully with five Parallel calls and
+citations from DePaul University, Computer History Museum, IEEE Spectrum, and an
+established technical reference.
+
+An independent review identified an unbounded retry/cost risk in the stronger
+source-search instruction. The fix caps research at two searches and one fetch
+per claim and passes an ADK `RunConfig` limiting the complete workflow to 20 LLM
+calls. Final verification: Ruff clean, 38 tests passed, 86.79% coverage, bounded
+live smoke passed, and the follow-up independent review found no actionable
+regressions.

@@ -71,7 +71,7 @@ Screenplay + production context
    Structured ScriptProof report
 ```
 
-The three agents are orchestrated with Google ADK. Parallel's official `parallel-google-adk` package supplies typed `web_search` and `web_fetch` tools plus tool-call tracing. The Flask app renders validated Pydantic models rather than raw model HTML.
+The three agents are orchestrated with Google ADK. Parallel's official `parallel-google-adk` package supplies typed `web_search` and `web_fetch` tools plus tool-call tracing. Before a report is returned, ScriptProof verifies that research claims triggered a Parallel call and that every public citation exactly matches a URL observed in a Parallel tool response. The Flask app renders validated Pydantic models rather than raw model HTML.
 
 See [the architecture note](docs/ARCHITECTURE.md) for trust boundaries and failure handling.
 
@@ -105,10 +105,10 @@ Authenticate and start the app:
 
 ```bash
 gcloud auth application-default login
-uv run flask --app main run --port 8080
+uv run python main.py
 ```
 
-Open `http://127.0.0.1:8080` and use the included sample scene.
+Open `http://127.0.0.1:8080` and use the included sample scene. The direct entry point intentionally bypasses Flask CLI's upward `.env` search, so a nested checkout cannot inherit a parent project's secrets.
 
 ## Production deployment
 
@@ -124,14 +124,14 @@ uv run ruff check .
 uv run pytest --cov=scriptproof --cov-report=term-missing -q
 ```
 
-The suite covers configuration drift, screenplay bounds, structured model contracts, HTTPS citation enforcement, output validation, safe template rendering, API behavior, and reviewer access control. External Google and Parallel calls are mocked in unit tests; a live integration smoke test is run only with real credentials.
+The suite covers configuration drift, isolated environment loading, screenplay bounds, structured model contracts, Parallel call and citation provenance gates, output validation, safe template rendering, API behavior, and reviewer access control. External Google and Parallel calls are mocked in unit tests; a live integration smoke test is run only with real credentials.
 
 ## Security and cost controls
 
 - `.env` and credentials are ignored by Git.
 - User input is length-bounded and normalized.
 - Model output is validated through Pydantic and auto-escaped by Jinja.
-- Citations must be HTTPS.
+- Citations must be HTTPS and must match URLs captured from actual Parallel tool responses.
 - API errors do not expose prompts, credentials, or provider responses.
 - Production can require a reviewer access code to prevent anonymous users from consuming paid Gemini and Parallel calls.
 - Cloud Run should use one bounded instance for the judging deployment.
@@ -140,11 +140,9 @@ The suite covers configuration drift, screenplay bounds, structured model contra
 
 ScriptProof is being built as a new project for the **Parallel track** of [Agentic Cinema: The Blockbuster Hackathon](https://agentic-cinema.devpost.com/). It uses Google Cloud AI exclusively for model and agent behavior and calls Parallel Search at runtime, matching the track's published requirements.
 
-## License
+## Disclaimer
 
-MIT License. See [LICENSE](LICENSE).
-
-**Author:** Simon Lin · X [@linsizhen](https://x.com/linsizhen) · Email: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
+ScriptProof is a research and editorial aid, not legal, safety, historical, or production authority. Human department leads must review sources and decisions before a shoot.
 
 ## Support
 
@@ -153,3 +151,9 @@ If ScriptProof helps your production workflow, you can support continued open-so
 <p align="center">
   <a href="https://buymeacoffee.com/simonlin1212"><img src="./assets/bmc-qr.png" width="180" alt="Buy Me a Coffee"></a>
 </p>
+
+## License
+
+MIT License. See [LICENSE](LICENSE). Release history is recorded in [CHANGELOG.md](CHANGELOG.md).
+
+**Author:** Simon Lin · X [@linsizhen](https://x.com/linsizhen) · Email: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)

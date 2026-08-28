@@ -89,14 +89,23 @@ def create_app(
 
     @app.post("/api/analyze")
     def analyze_api():
-        payload: dict[str, Any] = request.get_json(silent=True) or {}
         if not is_authorized(request.headers.get("X-ScriptProof-Key", "")):
             return jsonify({"error": "Reviewer access denied."}), 403
-        try:
-            script_text = normalize_script(
-                str(payload.get("script_text", "")), max_chars=max_chars
+        payload: Any = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return jsonify({"error": "The JSON body must be an object."}), 400
+        raw_script = payload.get("script_text", "")
+        raw_context = payload.get("project_context", "")
+        if not isinstance(raw_script, str) or not isinstance(raw_context, str):
+            return (
+                jsonify(
+                    {"error": "script_text and project_context must be strings."}
+                ),
+                400,
             )
-            project_context = str(payload.get("project_context", "")).strip()[:1000]
+        try:
+            script_text = normalize_script(raw_script, max_chars=max_chars)
+            project_context = raw_context.strip()[:1000]
             run = asyncio.run(report_generator(script_text, project_context))
         except ScriptInputError as exc:
             return jsonify({"error": str(exc)}), 400

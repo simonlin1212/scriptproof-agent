@@ -35,8 +35,8 @@ The web surface is Flask and server-rendered Jinja. Pydantic contracts sit betwe
 The initial tests were written before the modules and failed at import as expected. After implementation:
 
 - Ruff: passed.
-- pytest: 24 passed.
-- coverage: 88%.
+- pytest: 37 passed.
+- coverage: 86.71%.
 - desktop browser QA: no horizontal overflow.
 - homepage and report preview: visually inspected.
 - parent Agentic Brief Git repository: clean.
@@ -45,11 +45,18 @@ The initial tests were written before the modules and failed at import as expect
 
 - Bounded and normalized screenplay input.
 - HTTPS-only citations.
+- Every public citation must exactly match a URL observed in a Parallel tool response.
+- Research claims cannot produce a successful report without a completed Parallel call.
+- Dotenv loading is pinned to this repository and cannot inherit a parent project's secrets.
 - Pydantic validation of all public model output.
 - Jinja auto-escaping; model text is never marked safe.
 - Generic provider errors.
 - Optional constant-time reviewer access code for paid analysis calls.
 - Secrets excluded from Git and intended for Secret Manager.
+
+### Independent review
+
+The first local Codex review found five actionable issues: parent dotenv inheritance, missing Parallel call enforcement, missing citation provenance enforcement, non-object API payload failures, and noncanonical Vertex locations. A second review found that a failed `web_fetch` fallback could echo an unverified URL; this was also fixed test-first. The documented local server now bypasses Flask CLI's parent dotenv search. The final review found no actionable regressions. Ruff, 37 tests, 86.71% coverage, dependency audit, package build, local server smoke test, and secret scan all passed.
 
 ### Known external blocker
 

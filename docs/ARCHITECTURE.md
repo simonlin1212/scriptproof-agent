@@ -58,8 +58,10 @@ Evidence ledger + continuity desk + production handoff
 - Screenplay input is untrusted and normalized before model use.
 - Model output is untrusted until Pydantic validation succeeds.
 - Source URLs are accepted only when they are valid HTTPS URLs.
+- Every published source URL must exactly match a URL captured from a Parallel tool response.
+- A run with research claims fails closed when no Parallel call completes.
 - Provider exceptions are logged server-side; the client receives a generic error.
-- Secrets come from local environment variables or Secret Manager, never source code.
+- Local configuration loads only the repository's own `.env`; production secrets come from Secret Manager.
 - The optional reviewer code protects the paid endpoint with constant-time comparison.
 
 ## Failure semantics

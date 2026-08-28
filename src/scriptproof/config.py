@@ -4,21 +4,31 @@ from __future__ import annotations
 
 import os
 import re
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def load_project_dotenv(project_root: Path = PROJECT_ROOT) -> Path:
+    """Load only this repository's environment file, never a parent's."""
+    dotenv_path = project_root / ".env"
+    load_dotenv(dotenv_path=dotenv_path, override=False)
+    return dotenv_path
+
+
+PROJECT_ENV_FILE = load_project_dotenv()
 
 
 def validate_location(value: str) -> str:
     """Require the Vertex location that serves the selected Gemini model."""
-    location = value.strip().lower()
-    if location != "global":
+    if value != "global":
         raise RuntimeError(
-            "GOOGLE_CLOUD_LOCATION must be 'global' for Gemini 3.5; "
+            "GOOGLE_CLOUD_LOCATION must be exactly 'global' for Gemini 3.5; "
             f"received {value!r}."
         )
-    return location
+    return value
 
 
 def validate_model(value: str) -> str:

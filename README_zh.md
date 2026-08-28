@@ -42,7 +42,7 @@ ScriptProof 把剧本草稿转化为一份带出处、可以直接交给编剧�
 故事编辑 Agent：输出结构化修改与制片交接报告
 ```
 
-三个 Agent 由 Google ADK 编排，模型使用 Gemini 3.5 Flash。Parallel 官方 `parallel-google-adk` 包提供搜索、网页提取和调用追踪。
+三个 Agent 由 Google ADK 编排，模型使用 Gemini 3.5 Flash。Parallel 官方 `parallel-google-adk` 包提供搜索、网页提取和调用追踪。报告返回前，系统会确认待研究事实确实触发过 Parallel 调用，并逐条核对公开引用是否来自 Parallel 工具的真实返回。
 
 ## 本地运行
 
@@ -52,8 +52,10 @@ ScriptProof 把剧本草稿转化为一份带出处、可以直接交给编剧�
 cp .env.example .env
 uv sync --extra dev
 gcloud auth application-default login
-uv run flask --app main run --port 8080
+uv run python main.py
 ```
+
+该启动入口不会使用 Flask CLI 向上搜索 `.env`，因此嵌套目录不会误读父项目密钥。
 
 测试：
 
@@ -66,14 +68,18 @@ uv run pytest --cov=scriptproof --cov-report=term-missing -q
 
 ScriptProof 是为 [Agentic Cinema](https://agentic-cinema.devpost.com/) 的 Parallel 赛道新建的独立项目。AI 与 Agent 能力只使用 Google Cloud，Parallel Search 在生产流程中被真实调用。
 
-## License
+## 免责声明
 
-MIT License，详见 [LICENSE](LICENSE)。
-
-**作者：** Simon 林 · X [@linsizhen](https://x.com/linsizhen) · 邮箱：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
+ScriptProof 是研究与编辑辅助工具，不替代法律、安全、历史或制片专业判断。开拍前应由对应部门负责人复核来源与结论。
 
 ## 赞赏
 
 <p align="center">
   <a href="https://buymeacoffee.com/simonlin1212"><img src="./assets/bmc-qr.png" width="180" alt="Buy Me a Coffee"></a>
 </p>
+
+## License
+
+MIT License，详见 [LICENSE](LICENSE)。版本记录见 [CHANGELOG.md](CHANGELOG.md)。
+
+**作者：** Simon 林 · X [@linsizhen](https://x.com/linsizhen) · 邮箱：[simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)

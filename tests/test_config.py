@@ -1,6 +1,8 @@
 import pytest
 
+import scriptproof.config as config
 from scriptproof.config import (
+    load_project_dotenv,
     parse_script_limit,
     validate_location,
     validate_model,
@@ -8,9 +10,24 @@ from scriptproof.config import (
 
 
 def test_location_must_be_global_for_gemini_35():
-    assert validate_location(" global ") == "global"
-    with pytest.raises(RuntimeError, match="global"):
-        validate_location("us-central1")
+    assert validate_location("global") == "global"
+    for value in (" global ", "GLOBAL", "us-central1"):
+        with pytest.raises(RuntimeError, match="global"):
+            validate_location(value)
+
+
+def test_dotenv_loader_never_searches_parent_directories(monkeypatch, tmp_path):
+    loaded_paths = []
+
+    def fake_load_dotenv(*, dotenv_path, override):
+        loaded_paths.append((dotenv_path, override))
+        return False
+
+    monkeypatch.setattr(config, "load_dotenv", fake_load_dotenv)
+    dotenv_path = load_project_dotenv(tmp_path)
+
+    assert dotenv_path == tmp_path / ".env"
+    assert loaded_paths == [(tmp_path / ".env", False)]
 
 
 @pytest.mark.parametrize("model", ["gemini-3.5-flash", "gemini-3.5-pro"])

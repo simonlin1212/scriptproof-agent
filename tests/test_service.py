@@ -78,6 +78,28 @@ def test_api_analyze_returns_structured_json(app):
     assert response.get_json()["report"]["summary"]["readiness_score"] == 88
 
 
+@pytest.mark.parametrize("payload", [[], "screenplay", 42])
+def test_api_rejects_non_object_json(app, payload):
+    response = app.test_client().post("/api/analyze", json=payload)
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "The JSON body must be an object."}
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"script_text": 42},
+        {"script_text": "A" * 200, "project_context": ["not", "text"]},
+    ],
+)
+def test_api_rejects_non_string_fields(app, payload):
+    response = app.test_client().post("/api/analyze", json=payload)
+    assert response.status_code == 400
+    assert response.get_json() == {
+        "error": "script_text and project_context must be strings."
+    }
+
+
 def test_access_code_protects_paid_analysis(report_run):
     async def fake_generator(script_text: str, project_context: str = ""):
         return report_run

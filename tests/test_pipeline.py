@@ -2,14 +2,22 @@ from datetime import UTC, datetime
 
 import pytest
 
-from scriptproof.models import ScriptReport
+from scriptproof.models import ResearchBundle, ScriptReport
 from scriptproof.pipeline import (
+    DEFAULT_PRODUCTION_CONTEXT,
     MAX_LLM_CALLS,
+    MAX_PRODUCTION_CONTEXT_CHARS,
     ReportRun,
     collect_parallel_evidence,
     enforce_parallel_research,
     extract_report_from_state,
+    normalize_production_context,
     validate_report_provenance,
+)
+from scriptproof.quality import (
+    is_low_authority_source,
+    sanitize_research_bundle,
+    validate_report_source_quality,
 )
 
 
@@ -29,6 +37,20 @@ class FakeEvent:
 
 def test_agent_run_has_a_bounded_llm_call_budget():
     assert 1 <= MAX_LLM_CALLS <= 20
+
+
+def test_low_authority_source_matching_does_not_block_lookalike_domains():
+    assert is_low_authority_source("https://en.wikipedia.org/wiki/Recorder")
+    assert is_low_authority_source("https://en.wikipedia.org./wiki/Recorder")
+    assert not is_low_authority_source("https://notwikipedia.org/recorder")
+
+
+def test_production_context_is_normalized_for_shared_agent_state():
+    assert normalize_production_context("  London, 1938 ") == "London, 1938"
+    assert normalize_production_context("  ") == DEFAULT_PRODUCTION_CONTEXT
+    assert len(normalize_production_context("x" * 2000)) == (
+        MAX_PRODUCTION_CONTEXT_CHARS
+    )
 
 
 def test_extract_report_from_state_validates_structured_output():
@@ -193,3 +215,139 @@ def test_report_sources_must_match_parallel_response_urls():
     validate_report_provenance(report, {"https://archive.example/source"})
     with pytest.raises(RuntimeError, match="not returned by Parallel"):
         validate_report_provenance(report, {"https://different.example/source"})
+
+
+def test_source_quality_gate_removes_weak_sources_when_strong_evidence_remains():
+    report = extract_report_from_state(
+        {
+            "final_report": {
+                "title": "Signal Fire",
+                "logline": "A projectionist receives a warning inside a lost reel.",
+                "summary": {
+                    "readiness_score": 80,
+                    "headline": "A clear concept with one research correction.",
+                    "strongest_element": "The visual motif remains consistent.",
+                    "highest_priority": "Confirm nitrate film handling procedures.",
+                },
+                "findings": [
+                    {
+                        "claim": "The depicted recorder existed in 1938.",
+                        "verdict": "contradicted",
+                        "explanation": "The museum history dates the device later.",
+                        "recommendation": "Replace it with a period disc recorder.",
+                        "sources": [
+                            {
+                                "title": "Community encyclopedia",
+                                "url": "https://en.wikipedia.org/wiki/Recorder",
+                            },
+                            {
+                                "title": "Museum collection",
+                                "url": "https://museum.example/recorder",
+                            },
+                        ],
+                    }
+                ],
+                "continuity_issues": [],
+                "production_notes": [],
+                "research_trace": [],
+            }
+        }
+    )
+
+    sanitized = sanitize_research_bundle(
+        ResearchBundle(
+            findings=report.findings,
+            unresolved_questions=[],
+            queries_run=[],
+        )
+    )
+
+    assert [source.url for source in sanitized.findings[0].sources] == [
+        "https://museum.example/recorder"
+    ]
+    assert sanitized.findings[0].verdict == "contradicted"
+
+
+def test_source_quality_gate_downgrades_claim_supported_only_by_weak_sources():
+    report = extract_report_from_state(
+        {
+            "final_report": {
+                "title": "Signal Fire",
+                "logline": "A projectionist receives a warning inside a lost reel.",
+                "summary": {
+                    "readiness_score": 80,
+                    "headline": "A clear concept with one research correction.",
+                    "strongest_element": "The visual motif remains consistent.",
+                    "highest_priority": "Confirm nitrate film handling procedures.",
+                },
+                "findings": [
+                    {
+                        "claim": "The depicted recorder existed in 1938.",
+                        "verdict": "supported",
+                        "explanation": "A web answer says the device existed.",
+                        "recommendation": "Keep the prop unchanged.",
+                        "sources": [
+                            {
+                                "title": "Answer marketplace",
+                                "url": "https://www.justanswer.com/example",
+                            }
+                        ],
+                    }
+                ],
+                "continuity_issues": [],
+                "production_notes": [],
+                "research_trace": [],
+            }
+        }
+    )
+
+    sanitized = sanitize_research_bundle(
+        ResearchBundle(
+            findings=report.findings,
+            unresolved_questions=[],
+            queries_run=[],
+        )
+    )
+
+    finding = sanitized.findings[0]
+    assert finding.verdict == "uncertain"
+    assert finding.sources == []
+    assert "low-authority" in finding.explanation
+    assert "authoritative source" in sanitized.unresolved_questions[0]
+
+
+def test_final_report_quality_gate_rejects_reintroduced_weak_source():
+    report = extract_report_from_state(
+        {
+            "final_report": {
+                "title": "Signal Fire",
+                "logline": "A projectionist receives a warning inside a lost reel.",
+                "summary": {
+                    "readiness_score": 80,
+                    "headline": "A clear concept with one research correction.",
+                    "strongest_element": "The visual motif remains consistent.",
+                    "highest_priority": "Confirm nitrate film handling procedures.",
+                },
+                "findings": [
+                    {
+                        "claim": "The depicted recorder existed in 1938.",
+                        "verdict": "supported",
+                        "explanation": "A web answer says the device existed.",
+                        "recommendation": "Keep the prop unchanged.",
+                        "sources": [
+                            {
+                                "title": "Community encyclopedia",
+                                "url": "https://en.wikipedia.org/wiki/Recorder",
+                            }
+                        ],
+                    }
+                ],
+                "continuity_issues": [],
+                "production_notes": [],
+                "research_trace": [],
+            }
+        }
+    )
+
+    with pytest.raises(RuntimeError, match="low-authority"):
+        validate_report_source_quality(report)

@@ -13,13 +13,16 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 from parallel_google_adk import ParallelTracingPlugin
 
-from scriptproof.agent import root_agent
+from scriptproof.agent import root_agent, sanitize_production_context
 from scriptproof.models import ScriptAnalysis, ScriptReport
+from scriptproof.quality import validate_report_source_quality
 
 APP_NAME = "scriptproof"
 USER_ID = "web-reviewer"
 PARALLEL_TOOL_NAMES = frozenset({"web_search", "web_fetch"})
 MAX_LLM_CALLS = 20
+MAX_PRODUCTION_CONTEXT_CHARS = 1000
+DEFAULT_PRODUCTION_CONTEXT = "No additional production context supplied."
 
 
 @dataclass(slots=True)
@@ -126,6 +129,15 @@ def validate_report_provenance(report: ScriptReport, parallel_urls: set[str]) ->
         )
 
 
+def normalize_production_context(project_context: str) -> str:
+    """Prepare the user-supplied constraints for shared structured state."""
+    return sanitize_production_context(project_context.strip())[
+        :MAX_PRODUCTION_CONTEXT_CHARS
+    ] or (
+        DEFAULT_PRODUCTION_CONTEXT
+    )
+
+
 async def generate_report(
     script_text: str,
     project_context: str = "",
@@ -133,6 +145,7 @@ async def generate_report(
     runner: Runner | None = None,
 ) -> ReportRun:
     """Run the analyst, Parallel researcher, and editor in sequence."""
+    context = normalize_production_context(project_context)
     session_service = InMemorySessionService()
     active_runner = runner or Runner(
         agent=root_agent,
@@ -144,8 +157,8 @@ async def generate_report(
     session = await active_session_service.create_session(
         app_name=APP_NAME,
         user_id=USER_ID,
+        state={"production_context": context},
     )
-    context = project_context.strip() or "No additional production context supplied."
     request = (
         "Analyze this screenplay for factual research and continuity readiness.\n\n"
         f"PRODUCTION CONTEXT\n{context}\n\nSCREENPLAY\n{script_text}"
@@ -170,6 +183,7 @@ async def generate_report(
     enforce_parallel_research(final_session.state, parallel_evidence.call_count)
     report = extract_report_from_state(final_session.state)
     validate_report_provenance(report, parallel_evidence.urls)
+    validate_report_source_quality(report)
     return ReportRun(
         run_id=f"sp-{uuid4().hex[:12]}",
         generated_at=datetime.now(UTC),

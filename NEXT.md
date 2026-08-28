@@ -15,6 +15,7 @@
 - Ruff clean.
 - Independent review completed; all five findings fixed with regression tests.
 - Final pre-push review found no actionable regressions.
+- Official $100 Google Cloud credit request submitted on 2026-08-28; confirmation received.
 - Homepage and report visual QA passed.
 - Agentic Brief parent repository remains clean.
 
@@ -23,11 +24,12 @@
 1. Obtain a Parallel API key from `https://platform.parallel.ai/`.
 2. Put the key only in local `.env` and run the sample screenplay against real Gemini + Parallel.
 3. Inspect every citation and agent verdict; adjust prompts or schemas if necessary.
-4. Deploy to Cloud Run with Secret Manager and a reviewer access code.
-5. Perform live browser and failure-path QA.
-6. Create the public GitHub repository.
-7. Produce the English Devpost page, architecture graphic, screenshots, and ≤3-minute public demo.
-8. Submit to the Parallel track and verify `SUBMITTED` before the deadline.
+4. Watch `linsizhen@gmail.com` for the Google Cloud coupon and redeem it before August 31, 2026 at 11:59 PM PST.
+5. Deploy to Cloud Run with Secret Manager and a reviewer access code.
+6. Perform live browser and failure-path QA.
+7. Create the public GitHub repository.
+8. Produce the English Devpost page, architecture graphic, screenshots, and ≤3-minute public demo.
+9. Submit to the Parallel track and verify `SUBMITTED` before the deadline.
 
 ## Current blocker
 

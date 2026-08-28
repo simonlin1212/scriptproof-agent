@@ -61,3 +61,7 @@ The first local Codex review found five actionable issues: parent dotenv inherit
 ### Known external blocker
 
 Google Application Default Credentials are available and the existing GCP project is reachable. No `PARALLEL_API_KEY` was found in the environment or project configuration. A Parallel account/key is required before the first real end-to-end research run.
+
+### Google Cloud credit request
+
+The official Agentic Cinema Google Cloud credit form was submitted successfully on 2026-08-28 for `linsizhen@gmail.com`, Devpost username `linsizhen`, country `Hong Kong`, and partner integration `Parallel Search API`. The form states that approved credits should arrive within five business days and that the coupon must be redeemed by August 31, 2026 at 11:59 PM PST.

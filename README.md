@@ -25,15 +25,6 @@
 
 ---
 
-## Open to AI Roles in Shenzhen
-
-The author is open to AI roles in Shenzhen, particularly in **AI-powered investment research products, Forward Deployed Engineering (FDE), and AI consulting or solutions** at Tencent, other leading technology companies, and financial institutions.
-
-He combines experience in financial institutions with hands-on AI product development, building open-source market data tools and multi-agent systems with **17K+ GitHub stars**.
-
-Contact: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com)
-
----
 ![ScriptProof interface](docs/assets/scriptproof-home.png)
 
 ## What it does
@@ -162,14 +153,6 @@ ScriptProof is submitted to the **Parallel track** of [Agentic Cinema: The Block
 ## Disclaimer
 
 ScriptProof is a research and editorial aid, not legal, safety, historical, or production authority. Human department leads must review sources and decisions before a shoot.
-
-## Support
-
-If ScriptProof helps your production workflow, you can support continued open-source work:
-
-<p align="center">
-  <a href="https://buymeacoffee.com/simonlin1212"><img src="./assets/bmc-qr.png" width="180" alt="Buy Me a Coffee"></a>
-</p>
 
 ## License
 

@@ -15,6 +15,15 @@
   <img alt="License MIT" src="https://img.shields.io/badge/License-MIT-171714">
 </p>
 
+---
+
+**Open to Work · Shenzhen / Hong Kong / Remote**
+
+I'm Simon, focused on building AI agents and practical tools, and I'm looking for opportunities in Shenzhen, Hong Kong, or remotely.  
+Get in touch: [simonlin0423@gmail.com](mailto:simonlin0423@gmail.com).
+
+---
+
 <p align="center">
   <a href="#what-it-does">What it does</a> ·
   <a href="#architecture">Architecture</a> ·
